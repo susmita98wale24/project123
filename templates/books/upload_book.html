@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Book</title>
+</head>
+<body>
+    <h1>Upload a Book</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter the book title" required>
+        </div>
+        <div class="mb-3">
+            <label for="purchaseLink" class="form-label">Purchase Link</label>
+            <input type="url" class="form-control" id="purchaseLink" name="purchase_link" placeholder="Enter the purchase link" required>
+        </div>
+        <button type="submit">Upload</button>
+    </form>
+    <a href="{% url 'book_list' %}">Back to Book List</a>
+</body>
+</html>

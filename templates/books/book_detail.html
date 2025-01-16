@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ book.book_name }}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+</head>
+<body>
+    
+
+    {% block content %}
+    <div class="container mt-5">
+         <!-- Book Title -->
+    <h1>{{ book.title }}</h1>
+
+    <!-- Book Details -->
+    <p><strong>Author:</strong> {{ book.author }}</p>
+    <p><strong>Category:</strong> {{ book.category }}</p>
+    <p><strong>Description:</strong> {{ book.description }}</p>
+
+        <!-- Book Details -->
+        <div class="row">
+            <div class="col-md-6">
+                {% if book.image %}
+                    <img src="{{ book.image.url }}" class="img-fluid rounded" alt="{{ book.book_name }}">
+                {% else %}
+                    <img src="{% static 'images/default_book_image.jpg' %}" class="img-fluid rounded" alt="Default Image">
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <h2>{{ book.book_name }}</h2>
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                <p><strong>Category:</strong> {{ book.category }}</p>
+                <p><strong>Publication Year:</strong> {{ book.publication_year }}</p>
+                <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+                {% if book.pdf %}
+                <p><a href="{{ book.pdf.url }}" target="_blank" class="btn btn-info">View PDF</a></p>
+                {% endif %}
+                {% if book.purchase_link %}
+                <p><a href="{{ book.purchase_link }}" target="_blank" class="btn btn-success">Buy This Book</a></p>
+                {% endif %}
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Average Rating -->
+        <h3>Average Rating: {{ book.avg_rating|default:"No ratings yet." }}</h3>
+
+        <!-- User Reviews -->
+        <h4>Reviews</h4>
+        {% if book.ratings.all %}
+            {% for rating in book.ratings.all %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p><strong>{{ rating.user.username }}</strong> rated this book: <strong>{{ rating.rating }}/5</strong></p>
+                    <p>{{ rating.review }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <p class="text-muted">No reviews yet. Be the first to review this book!</p>
+        {% endif %}
+
+        {% if book.image %}
+            <img src="{{ book.image.url }}" class="img-fluid rounded" alt="{{ book.book_name }}">
+        {% else %}
+            <p>No image available for this book.</p>
+        {% endif %}
+
+        {% if book.image and book.image.url %}
+            <img src="{{ book.image.url }}" class="img-fluid rounded" alt="{{ book.book_name }}">
+        {% else %}
+            <img src="{% static 'images/default_book_image.jpg' %}" class="img-fluid rounded" alt="Default Image">
+        {% endif %}
+
+        <!-- Add a Review -->
+        <h4>Add Your Review</h4>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="review" class="form-label">Review</label>
+                <textarea id="review" name="review" class="form-control" rows="4" placeholder="Write your review here"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating</label>
+                <select id="rating" name="rating" class="form-select">
+                    <option value="" disabled selected>Choose a rating</option>
+                    {% for i in "12345" %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+    {% endblock %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

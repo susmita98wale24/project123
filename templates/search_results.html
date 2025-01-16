@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Link your CSS if available -->
+</head>
+<body>
+    <header>
+        <h1>Book Search</h1>
+    </header>
+
+    <main>
+        <!-- Search Form -->
+        <form method="get" action="{% url 'books:search_books' %}">
+            <input type="text" name="q" placeholder="Search for books or authors..." value="{{ query }}">
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Search Results -->
+        {% if books %}
+            <h2>Search Results for "{{ query }}"</h2>
+            <ul>
+                {% for book in books %}
+                    <li>
+                        <strong>{{ book.book_name }}</strong> by {{ book.author }}<br>
+                        <em>Category:</em> {{ book.category }}<br>
+                        <em>Published:</em> {{ book.publication_year }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No results found for "{{ query }}".</p>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>&copy; {{ current_year }} Book Recommender System</p>
+    </footer>
+</body>
+</html>
